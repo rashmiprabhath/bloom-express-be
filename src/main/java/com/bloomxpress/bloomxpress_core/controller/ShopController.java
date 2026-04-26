@@ -57,4 +57,10 @@ public class ShopController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PostMapping("/{id}/click")
+    public ResponseEntity<Void> incrementClick(@PathVariable Long id) {
+        shopService.incrementClicks(id);
+        return ResponseEntity.ok().build();
+    }
 }

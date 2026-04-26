@@ -20,4 +20,9 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
 
     // Fetch shops created after a specific date
     Page<Shop> findByCreatedDateAfter(LocalDateTime date, Pageable pageable);
+
+    @org.springframework.data.jpa.repository.Modifying
+    @org.springframework.transaction.annotation.Transactional
+    @Query("UPDATE Shop s SET s.clicks = s.clicks + 1 WHERE s.id = :id")
+    void incrementClicks(@Param("id") Long id);
 }

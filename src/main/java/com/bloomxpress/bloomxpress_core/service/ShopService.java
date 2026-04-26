@@ -76,4 +76,9 @@ public class ShopService {
     public Optional<ShopDTO> getShopById(Long id) {
         return shopRepository.findById(id).map(shopMapper::toDTO);
     }
+
+    @Transactional
+    public void incrementClicks(Long id) {
+        shopRepository.incrementClicks(id);
+    }
 }
