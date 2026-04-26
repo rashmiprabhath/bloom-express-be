@@ -2,6 +2,7 @@ package com.bloomxpress.bloomxpress_core.controller;
 
 import com.bloomxpress.bloomxpress_core.dto.request.ShopDTO;
 import com.bloomxpress.bloomxpress_core.enums.ShopStatus;
+import com.bloomxpress.bloomxpress_core.enums.ShopOrder;
 import com.bloomxpress.bloomxpress_core.service.ShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,12 +36,14 @@ public class ShopController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
     // 1. Get Shops List (with optional category filter and pagination)
     @GetMapping
     public ResponseEntity<Page<ShopDTO>> getShops(
             @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) ShopOrder order,
             @RequestParam(defaultValue = "0") int page) {
-        return ResponseEntity.ok(shopService.getShops(categoryId, page));
+        return ResponseEntity.ok(shopService.getShops(categoryId, order, page));
     }
 
     // 2. Get Latest Shops (last 3 months)

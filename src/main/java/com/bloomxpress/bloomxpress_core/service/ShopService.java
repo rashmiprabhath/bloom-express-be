@@ -3,6 +3,7 @@ package com.bloomxpress.bloomxpress_core.service;
 import com.bloomxpress.bloomxpress_core.dto.request.ShopDTO;
 import com.bloomxpress.bloomxpress_core.entity.Shop;
 import com.bloomxpress.bloomxpress_core.enums.ShopStatus;
+import com.bloomxpress.bloomxpress_core.enums.ShopOrder;
 import com.bloomxpress.bloomxpress_core.mapper.ShopMapper;
 import com.bloomxpress.bloomxpress_core.repository.CategoryRepository;
 import com.bloomxpress.bloomxpress_core.repository.ShopRepository;
@@ -59,9 +60,29 @@ public class ShopService {
         });
     }
 
+
     @Transactional
-    public Page<ShopDTO> getShops(Long categoryId, int page) {
-        Pageable pageable = PageRequest.of(page, 12, Sort.by("name").ascending());
+    public Page<ShopDTO> getShops(Long categoryId, ShopOrder order, int page) {
+        Sort sort;
+        if (order == null) order = ShopOrder.NONE;
+        
+        switch (order) {
+            case ATOZ:
+                sort = Sort.by("name").ascending();
+                break;
+            case ZTOA:
+                sort = Sort.by("name").descending();
+                break;
+            case CLICK_COUNT:
+                sort = Sort.by("clicks").descending();
+                break;
+            case NONE:
+            default:
+                sort = Sort.unsorted();
+                break;
+        }
+
+        Pageable pageable = PageRequest.of(page, 12, sort);
         return shopRepository.findAllByCategoryId(categoryId, pageable)
                 .map(shopMapper::toDTO);
     }
